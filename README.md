@@ -14,7 +14,7 @@ If no profiling is used, the basic block frequencies are estimated by means of h
 ## Build
 
 Assuming that you already have LLVM libraries installed (this repo using LLVM version 18.x.x and above).
-Then clone this repo into your Transformation directory and build it just like other transformation libries.
+Then clone this repo into your Transformation directory and build it just like other transformation libraries.
 
 ## Heat CFG Printer
 
