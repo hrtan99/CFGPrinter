@@ -5,7 +5,7 @@ This repository ported from [llvm-heat-printer](https://github.com/rcorcs/llvm-h
 It primarily implements analysis passes that generate visualization (dot) files that depict the (profiled) execution frequency of a piece of code using a cool/warm color map.
 
 Cool/Warm color map:
-![CoolWarm Map](https://github.com/rcorcs/llvm-heat-printer/raw/master/images/coolwarm.png)
+![CoolWarm Map](images/coolwarm.png)
 
 LLVM Heat Printer supports profiling annotation.
 In order to see how to use profiling information, look at Section [Using Profiling].
