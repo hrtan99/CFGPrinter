@@ -1,6 +1,6 @@
 # LLVM CFG Printer Plugin
 
-Given LLVM's strong recommendation to use the new pass manager, this repository aims to provide an LLVM plugin that is compatible with the new pass manager. It supports the latest version of LLVM infrastructure and offers capabilities such as DomTree visualization and visualization assistance for profiling.
+Given LLVM's strong recommendation to use the new pass manager, this repository aims to provide a LLVM plugin that is compatible with the new pass manager. It supports the latest version of LLVM infrastructure and offers capabilities such as DomTree visualization and visualization assistance for profiling.
 
 It primarily implements analysis passes that generate visualization (dot) files that depict the (profiled) execution frequency of a piece of code using a cool/warm color map.
 
