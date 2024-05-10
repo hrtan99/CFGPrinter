@@ -1,6 +1,6 @@
-# LLVM Printer Pass
+# LLVM CFG Printer Plugin
 
-This repository ported from [llvm-heat-printer](https://github.com/rcorcs/llvm-heat-printer), with supporting a relatively newer version of LLVM infrastructure and offering some passes like DomTree visualization, visualization assistance for profiling, etc.
+Given LLVM's strong recommendation to use the new pass manager, this repository aims to provide an LLVM plugin that is compatible with the new pass manager. It supports the latest version of LLVM infrastructure and offers capabilities such as DomTree visualization and visualization assistance for profiling.
 
 It primarily implements analysis passes that generate visualization (dot) files that depict the (profiled) execution frequency of a piece of code using a cool/warm color map.
 
@@ -13,7 +13,7 @@ If no profiling is used, the basic block frequencies are estimated by means of h
 
 ## Build
 
-Assuming that you already have LLVM libraries installed (this repo using LLVM version 18.x.x and above).
+Assuming that you already have LLVM libraries installed (this project using LLVM version 18.x.x and above).
 Then clone this repo into your Transformation directory and build it just like other transformation libraries.
 
 ## Heat CFG Printer
@@ -28,12 +28,14 @@ Use '-dot-heat-cfg-only' for the simplified output without the LLVM code for eac
 
 The user can also choose between an intra-function or inter-function maximum frequency reference.
 For the intra-function heat map, activated with the flag '-heat-cfg-per-function', the heat scale will consider only the frequencies of the basic blocks inside the current function, i.e., every function will have a basic block with maximum heat.
+
 For the inter-function heat map (default), the heat scale will consider all functions of the current module (translation unit), i.e., it first computes the maximum frequency for all basic blocks in the whole module, such that the heat of each basic block will be scaled in respect of that maximum frequency.
+
 With the inter-function heat map, the CFGs for some functions can be completely cold.
 
 In order to generate the heat CFG .dot file, use the following command:
 ```
-$> opt -load ../build/lib/libHeatCFGPrinter.so -dot-heat-cfg  <.bc file> >/dev/null
+$> opt -load-pass-plugin ../build/lib/libCFGPrinter.so -pass=dot-heat-cfg  <.bc file> >/dev/null
 ```
 
 ## Heat CallGraph Printer
@@ -47,7 +49,7 @@ The following figure illustrates the heat call-graph highlighting the maximum ba
 
 In order to generate the heat call-graph .dot file, use the following command:
 ```
-$> opt -load ../build/lib/libHeatCallPrinter.so -dot-heat-callgraph  <.bc file> >/dev/null
+$> opt -load-pass-plugin ../build/lib/libCFGPrinter.so -pass=-dot-heat-callgraph  <.bc file> >/dev/null
 ```
 
 ## Using Profiling
