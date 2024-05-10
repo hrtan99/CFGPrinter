@@ -22,30 +22,23 @@
 
 #include "llvm/IR/Module.h"
 #include "llvm/Pass.h"
+#include "llvm/Passes/PassBuilder.h"
+#include "llvm/Passes/PassPlugin.h"
 
-using namespace llvm;
 
-namespace {
+namespace llvm {
 
-class HeatCFGPrinterPass : public ModulePass {
-public:
-  static char ID;
-  HeatCFGPrinterPass() : ModulePass(ID) {}
 
-  void getAnalysisUsage(AnalysisUsage &AU) const override;
-  bool runOnModule(Module &M) override;
+struct HeatCFGPrinterPass : PassInfoMixin<HeatCFGPrinterPass> {
+    PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 };
 
-class HeatCFGOnlyPrinterPass : public ModulePass {
-public:
-  static char ID;
-  HeatCFGOnlyPrinterPass() : ModulePass(ID) {}
-
-  void getAnalysisUsage(AnalysisUsage &AU) const override;
-  bool runOnModule(Module &M) override;
-
+struct HeatCFGOnlyPrinterPass : PassInfoMixin<HeatCFGOnlyPrinterPass> {
+    PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 };
 
-}
+
+
+} // namespace llvm
 
 #endif

@@ -22,20 +22,17 @@
 
 #include "llvm/IR/Module.h"
 #include "llvm/Pass.h"
+#include "llvm/Passes/PassBuilder.h"
+#include "llvm/Passes/PassPlugin.h"
 
-using namespace llvm;
 
-namespace {
+namespace llvm {
 
-class HeatCallGraphDOTPrinterPass : public ModulePass {
-public:
-  static char ID;
-  HeatCallGraphDOTPrinterPass() : ModulePass(ID) {}
-
-  void getAnalysisUsage(AnalysisUsage &AU) const override;
-  bool runOnModule(Module &M) override;
+struct HeatCallGraphDOTPrinterPass : PassInfoMixin<HeatCallGraphDOTPrinterPass> {
+    PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 };
 
-}
+
+};
 
 #endif

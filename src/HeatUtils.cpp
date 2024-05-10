@@ -1,4 +1,3 @@
-
 #include "HeatUtils.h"
 
 #include "llvm/IR/Instructions.h"
