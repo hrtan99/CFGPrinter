@@ -35,7 +35,7 @@ With the inter-function heat map, the CFGs for some functions can be completely 
 
 In order to generate the heat CFG .dot file, use the following command:
 ```
-$> opt -load-pass-plugin ../build/lib/libCFGPrinter.so -pass=dot-heat-cfg  <.bc file> >/dev/null
+$> opt -load-pass-plugin ../build/lib/libCFGPrinter.so -passes=dot-heat-cfg  <.bc file> >/dev/null
 ```
 
 ## Heat CallGraph Printer
@@ -49,7 +49,7 @@ The following figure illustrates the heat call-graph highlighting the maximum ba
 
 In order to generate the heat call-graph .dot file, use the following command:
 ```
-$> opt -load-pass-plugin ../build/lib/libCFGPrinter.so -pass=-dot-heat-callgraph  <.bc file> >/dev/null
+$> opt -load-pass-plugin ../build/lib/libCFGPrinter.so -passes=-dot-heat-callgraph  <.bc file> >/dev/null
 ```
 
 ## Using Profiling
