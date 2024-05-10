@@ -18,24 +18,24 @@ using namespace llvm;
 
 /* New PM Registration */
 llvm::PassPluginLibraryInfo getCFGPrinterPluginInfo() {
-  return {LLVM_PLUGIN_API_VERSION, "DomTreeGraphWriter", LLVM_VERSION_STRING,
-          [](PassBuilder &PB) {
+    return {
+        LLVM_PLUGIN_API_VERSION, "DomTreeGraphWriter", LLVM_VERSION_STRING,
+        [](PassBuilder &PB) {
             // PB.registerVectorizerStartEPCallback(
             //     [](llvm::FunctionPassManager &PM, OptimizationLevel Level) {
             //       PM.addPass(DomTreeGraphWriterPass());
             //     });
             PB.registerPipelineParsingCallback(
-                [](StringRef Name, llvm::FunctionPassManager &PM,
-                   ArrayRef<llvm::PassBuilder::PipelineElement>) {
+                [](StringRef Name, llvm::FunctionPassManager &PM, ArrayRef<llvm::PassBuilder::PipelineElement>) {
                     if (Name == "dot-domtree") {
                         PM.addPass(DomTreeGraphWriterPass());
                         return true;
                     }
                     return false;
-                });
+                }
+            );
             PB.registerPipelineParsingCallback(
-                [](StringRef Name, llvm::ModulePassManager &PM,
-                   ArrayRef<llvm::PassBuilder::PipelineElement>) {
+                [](StringRef Name, llvm::ModulePassManager &PM, ArrayRef<llvm::PassBuilder::PipelineElement>) {
                     if (Name == "dot-heat-callgraph") {
                         PM.addPass(HeatCallGraphDOTPrinterPass());
                         return true;
@@ -49,8 +49,10 @@ llvm::PassPluginLibraryInfo getCFGPrinterPluginInfo() {
                         return true;
                     }
                     return false;
-                });
-          }};
+                }
+            );
+        }
+    };
 
 }
 

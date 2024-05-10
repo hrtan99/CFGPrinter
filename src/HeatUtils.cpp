@@ -10,87 +10,85 @@ static const std::string heatPalette[100] = {"#3d50c3", "#4055c8", "#4358cb", "#
 
 static const unsigned heatSize = 100;
 
-
 bool hasProfiling(Module &M){
-  for (Function &F : M) {
-    for (BasicBlock &BB : F) {
-      Instruction *TI = BB.getTerminator();
-      if (TI==nullptr)
-        continue;
-      if (TI->getMetadata(llvm::LLVMContext::MD_prof)!=nullptr)
-        return true;
+    for (Function &F : M) {
+        for (BasicBlock &BB : F) {
+            Instruction *TI = BB.getTerminator();
+            if (TI==nullptr)
+                continue;
+            if (TI->getMetadata(llvm::LLVMContext::MD_prof)!=nullptr)
+                return true;
+        }
     }
-  }
-  return false;
+    return false;
 }
 
 uint64_t getBlockFreq(const BasicBlock *BB, BlockFrequencyInfo *BFI,
                       bool useHeuristic){
-  uint64_t freqVal = 0;
-  if (!useHeuristic) {
-    std::optional< uint64_t > freq = BFI->getBlockProfileCount(BB);
-    if (freq.has_value())
-      freqVal = freq.value();
-  } else {
-    freqVal = BFI->getBlockFreq(BB).getFrequency();
-  }
-  return freqVal;
+    uint64_t freqVal = 0;
+    if (!useHeuristic) {
+        std::optional< uint64_t > freq = BFI->getBlockProfileCount(BB);
+        if (freq.has_value())
+        freqVal = freq.value();
+    }
+    else {
+        freqVal = BFI->getBlockFreq(BB).getFrequency();
+    }
+    return freqVal;
 }
 
 uint64_t getNumOfCalls(Function &callerFunction, Function &calledFunction,
                       function_ref<BlockFrequencyInfo *(Function &)> LookupBFI){
-  auto *BFI = LookupBFI(callerFunction);
-  uint64_t counter = 0;
-  for (BasicBlock &BB : callerFunction) {
-     uint64_t freq = getBlockFreq(&BB,BFI);
-     for (Instruction &I : BB) {
-        if (CallInst *Call = dyn_cast<CallInst>(&I)) {
-           if (Call->getCalledFunction()==(&calledFunction))
-              counter += freq;
+    auto *BFI = LookupBFI(callerFunction);
+    uint64_t counter = 0;
+    for (BasicBlock &BB : callerFunction) {
+        uint64_t freq = getBlockFreq(&BB,BFI);
+        for (Instruction &I : BB) {
+            if (CallInst *Call = dyn_cast<CallInst>(&I)) {
+                if (Call->getCalledFunction()==(&calledFunction))
+                    counter += freq;
+            }
         }
-     }
-  }
-  return counter;
+    }
+    return counter;
 }
 
 uint64_t getMaxFreq(Function &F, BlockFrequencyInfo *BFI, bool useHeuristic){
   uint64_t maxFreq = 0;
-  for (BasicBlock &BB : F) {
-     uint64_t freqVal = getBlockFreq(&BB,BFI,useHeuristic);
-     if (freqVal>=maxFreq)
-        maxFreq = freqVal;
-  }
+    for (BasicBlock &BB : F) {
+        uint64_t freqVal = getBlockFreq(&BB,BFI,useHeuristic);
+        if (freqVal>=maxFreq)
+            maxFreq = freqVal;
+    }
   return maxFreq;
 }
 
 
-uint64_t getMaxFreq(Module &M,
-                    function_ref<BlockFrequencyInfo *(Function &)> LookupBFI,
-                    bool useHeuristic){
+uint64_t getMaxFreq(Module &M, function_ref<BlockFrequencyInfo *(Function &)> LookupBFI, bool useHeuristic){
   uint64_t maxFreq = 0;
-  for (Function &F : M) {
-    if (F.isDeclaration())
-      continue;
-    uint64_t localMaxFreq = getMaxFreq(F,LookupBFI(F),useHeuristic);
-    if (localMaxFreq>=maxFreq)
-       maxFreq = localMaxFreq;
-  }
+    for (Function &F : M) {
+        if (F.isDeclaration())
+            continue;
+        uint64_t localMaxFreq = getMaxFreq(F,LookupBFI(F),useHeuristic);
+        if (localMaxFreq>=maxFreq)
+            maxFreq = localMaxFreq;
+    }
   return maxFreq;
 }
 
 std::string getHeatColor(uint64_t freq, uint64_t maxFreq){
-  if (freq>maxFreq) freq = maxFreq;
-  unsigned colorId = unsigned( round((double(freq)/maxFreq)*(heatSize-1.0)) );
-  return heatPalette[colorId];
+    if (freq>maxFreq) freq = maxFreq;
+    unsigned colorId = unsigned( round((double(freq)/maxFreq)*(heatSize-1.0)) );
+    return heatPalette[colorId];
 }
 
 std::string getHeatColor(double percent){
-  if (percent > 1.0)
-     percent = 1.0;
-  if (percent < 0.0)
-     percent = 0.0;
-  unsigned colorId = unsigned( round(percent*(heatSize-1.0)) );
-  return heatPalette[colorId];
+    if (percent > 1.0)
+        percent = 1.0;
+    if (percent < 0.0)
+        percent = 0.0;
+    unsigned colorId = unsigned( round(percent*(heatSize-1.0)) );
+    return heatPalette[colorId];
 }
 
 }
