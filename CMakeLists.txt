@@ -18,6 +18,7 @@ include(AddLLVM)
 if (NOT WIN32 AND NOT CYGWIN)
   add_llvm_pass_plugin(CFGPrinter
     src/CFGPrinter.cpp
+    src/CFGFreqPrinter.cpp
     src/DomTreePrinter.cpp
     src/HeatCallPrinter.cpp
     src/HeatCFGPrinter.cpp

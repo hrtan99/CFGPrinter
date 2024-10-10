@@ -12,6 +12,7 @@
 #include "DomTreePrinter.h"
 #include "HeatCallPrinter.h"
 #include "HeatCFGPrinter.h"
+#include "CFGFreqPrinter.h"
 
 
 using namespace llvm;
@@ -46,6 +47,10 @@ llvm::PassPluginLibraryInfo getCFGPrinterPluginInfo() {
                     }
                     if (Name == "dot-heat-cfg-only") {
                         PM.addPass(HeatCFGOnlyPrinterPass());
+                        return true;
+                    }
+                    if (Name == "dot-cfg-freq") {
+                        PM.addPass(CFGFreqPrinterPass());
                         return true;
                     }
                     return false;
