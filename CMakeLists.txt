@@ -1,5 +1,5 @@
-
-cmake_minimum_required(VERSION 3.4.3)
+cmake_minimum_required(VERSION 3.10.3)
+project(CFGPrinter)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -9,6 +9,7 @@ find_package(LLVM REQUIRED CONFIG)
 add_definitions(${LLVM_DEFINITIONS})
 include_directories(${LLVM_INCLUDE_DIRS})
 
+include(AddLLVM)
 
 # The plugin expects to not link against the Support and Core libraries,
 # but expects them to exist in the process loading the plugin. This doesn't
