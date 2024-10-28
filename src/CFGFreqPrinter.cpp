@@ -19,6 +19,7 @@
 
 #include "CFGFreqPrinter.h"
 #include "HeatUtils.h"
+#include "CSVUtil.h"
 
 #include "llvm/Analysis/BlockFrequencyInfo.h"
 #include "llvm/Analysis/BranchProbabilityInfo.h"
@@ -258,10 +259,38 @@ static void writeHeatCFGToDotFile(Function &F, BlockFrequencyInfo *BFI,
 
   HeatCFGInfo heatCFGInfo(&F, BFI, maxFreq, useHeuristic);
 
+  
+  using namespace std;  
+  shared_ptr<Row> headLine = make_shared<Row>();
+  (*headLine)
+    .appendData("func")
+    .appendData("block_freq")
+    ;
+
+  bool isExist = CSV::create("instr.csv");
+  CSV& instr_csv = CSV::getRef();
+  if (!isExist) {
+    instr_csv.setHead(headLine);
+  }
+
+  shared_ptr<Row> row = make_shared<Row>();
+  row->appendData(F.getName().str());
+  std::string str = "";
+  for (auto &BB : F) {
+    uint64_t freq = heatCFGInfo.getFreq(&BB);
+    str += std::to_string(BB.getNumber()) + ":" + std::to_string(freq) + ",";
+  }
+  str.pop_back();
+  row->appendData("\"" + str + "\"");
+
+  instr_csv.appendRow(row);
+  instr_csv.flush();
+
+  
   if (!EC)
      WriteGraph(File, &heatCFGInfo, isSimple);
   else
-     errs() << "  error opening file for writing!";
+     errs() << " error opening file for writing!";
   errs() << "\n";
 }
 

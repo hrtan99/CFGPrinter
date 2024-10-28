@@ -23,6 +23,7 @@ if (NOT WIN32 AND NOT CYGWIN)
     src/HeatCallPrinter.cpp
     src/HeatCFGPrinter.cpp
     src/HeatUtils.cpp
+    src/CSVUtil.cpp
     DEPENDS
     intrinsics_gen
     BUILDTREE_ONLY
